@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NTNU-cyborg_backend.iml" filepath="$PROJECT_DIR$/NTNU-cyborg_backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gs-rest-service.iml" filepath="$PROJECT_DIR$/gs-rest-service.iml" />
     </modules>
   </component>
 </project>
