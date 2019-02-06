@@ -11,7 +11,7 @@ TODO
   * Actually make things
   
 # Links
-[I'm an inline-style link](https://www.google.com)
+["Frontend"](https://github.com/Astroxslurg/ntnu-cyborg_node)
 
 [Process rapport](https://v2.overleaf.com/project/5c473ca230ca6e167b9474d2)
 
