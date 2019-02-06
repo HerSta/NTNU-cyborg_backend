@@ -3,4 +3,7 @@ Vi skal jobbe med å lage en nettside som kan brukes for eksponering for NTNU Cy
 
 [I'm an inline-style link](https://www.google.com)
 
-[Our process rapport](https://v2.overleaf.com/project/5c473ca230ca6e167b9474d2)
+[Process rapport](https://v2.overleaf.com/project/5c473ca230ca6e167b9474d2)
+
+[Project rapport](https://v2.overleaf.com/project/5c4779fd69b6f03a8ca16835)
+
