@@ -6,9 +6,9 @@ TODO
 
 # TODO
 * Actually make things
-              * Actually make things
-                  * Actually make things
-          * Actually make things
+  * Actually make things
+      * Actually make things
+  * Actually make things
 
 [I'm an inline-style link](https://www.google.com)
 
