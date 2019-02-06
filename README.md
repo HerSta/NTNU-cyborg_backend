@@ -5,10 +5,10 @@ Vi skal jobbe med å lage en nettside som kan brukes for eksponering for NTNU Cy
 TODO
 
 # TODO
-* Actually make things
-  * Actually make things
-      * Actually make things
-  * Actually make things
+* Find a place to put the server
+  * Add git hooks
+      * Do stuff
+  * Do more stuff
   
 # Links
 ["Frontend"](https://github.com/Astroxslurg/ntnu-cyborg_node)
