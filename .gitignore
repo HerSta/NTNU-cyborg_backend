@@ -13,10 +13,10 @@
 .idea/**/dictionaries
 .idea/**/shelf
 **.idea**
-
+gs-rest-service.iml
 # Generated files
 .idea/**/contentModel.xml
-
+.idea/*
 # Sensitive or high-churn files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
