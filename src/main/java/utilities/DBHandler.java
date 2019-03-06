@@ -141,4 +141,25 @@ public class DBHandler {
         }
 
     }
+
+    public List<String> get10kDataFromNode(String nodeID){
+        List<String> results = new ArrayList<>();
+        String query = "SELECT * FROM cellData WHERE cellID = ?";
+
+        try{
+            Connection conn = getConnection();
+            PreparedStatement statement = conn.prepareStatement(query);
+            ResultSet rs = null;
+            statement.setString(1, nodeID);
+            rs = statement.executeQuery();
+            while(rs.next()){
+                String value = rs.getString("value");
+                //System.out.println(value);
+                results.add(value);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return results;
+    }
 }
