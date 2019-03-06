@@ -2,6 +2,8 @@ package hello;
 import utilities.DBHandler;
 import utilities.FileHandler;
 
+import java.util.List;
+
 public class Main {
 
 
@@ -13,6 +15,8 @@ public class Main {
         //fileHandler.ReadCSV();
         //dbHandler.insertCSVMatrixIntoDB();
         dbHandler.get10kDataFromNode("47 (ID=0) [pV]");
+        List<String> nodelist = dbHandler.getNodes();
+        System.out.println(nodelist);
     }
 
 

@@ -17,10 +17,19 @@ public class Sensordata {
 
 
 
-    public Sensordata(String queryString){
+    public Sensordata(String nodeRequestID){
+        nodeID = nodeRequestID;
         DBHandler dbHandler = new DBHandler();
-        nodeID = queryString;
+        List<String> nodeList = dbHandler.getNodes();
+        String queryString = "";
+        for(String nodeString : nodeList ){
+            if(nodeRequestID.matches(nodeString.split(" ")[0])){
+                queryString = nodeString;
+
+            }
+        }
         Map<String, List<String>> resultMap = dbHandler.get10kDataFromNode(queryString);
+
         resultList = resultMap.get("data");
         timestampList = resultMap.get("timestamp");
     }

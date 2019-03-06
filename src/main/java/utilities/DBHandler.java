@@ -2,6 +2,7 @@ package utilities;
 
 import org.hibernate.validator.cfg.context.ContainerElementConstraintMappingContext;
 
+import javax.swing.plaf.nimbus.State;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -195,5 +196,21 @@ public class DBHandler {
         resultMap.put("data", results);
         resultMap.put("timestamp", timeStampList);
         return resultMap;
+    }
+
+    public List<String> getNodes(){
+        List<String> nodeList = new ArrayList<>();
+        Connection conn = getConnection();
+        String query = "SELECT distinct cellID from cellData";
+        try{
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()){
+                nodeList.add(rs.getString("cellID"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return nodeList;
     }
 }
