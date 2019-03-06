@@ -11,6 +11,8 @@ public class Sensordata {
     String nodeID;
     List<String> resultList;
     List<String> timestampList;
+    String tUnit = "uS";
+    String vUnit = "pV";
 
 
 
@@ -33,5 +35,13 @@ public class Sensordata {
 
     public String getNodeID() {
         return nodeID;
+    }
+
+    public String gettUnit() {
+        return tUnit;
+    }
+
+    public String getvUnit() {
+        return vUnit;
     }
 }
