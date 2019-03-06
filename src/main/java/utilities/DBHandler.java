@@ -7,9 +7,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
 public class DBHandler {
     private final String username = "kimera_k3ah";
@@ -142,8 +141,10 @@ public class DBHandler {
 
     }
 
-    public List<String> get10kDataFromNode(String nodeID){
+    public Map<String, List<String>> get10kDataFromNode(String nodeID){
+        Map<String, List<String>> resultMap = new HashMap<>();
         List<String> results = new ArrayList<>();
+        List<String> timeStampList = new ArrayList<>();
         String query = "SELECT * FROM cellData WHERE cellID = ?";
 
         try{
@@ -152,14 +153,47 @@ public class DBHandler {
             ResultSet rs = null;
             statement.setString(1, nodeID);
             rs = statement.executeQuery();
+            int counter = 0;
+            boolean positiveGrowth = true;
+            String previousNumber = "0";
+            String previousTimestamp = "0";
+            int currentNumber = 0;
             while(rs.next()){
                 String value = rs.getString("value");
+                String timestamp = rs.getString("timeStamp");
+                /*if (counter % 3 == 0){
+                    results.add(Integer.parseInt(value));
+                }*/
+
+                if(positiveGrowth){
+                    currentNumber = Integer.parseInt(value);
+                    if(currentNumber < Integer.parseInt(previousNumber)){
+                        timeStampList.add(previousTimestamp);
+                        results.add(previousNumber);
+                        positiveGrowth = false;
+                    }
+                }else {
+                    currentNumber = Integer.parseInt(value);
+                    if(currentNumber > Integer.parseInt(previousNumber)){
+                        timeStampList.add(previousTimestamp);
+                        results.add(previousNumber);
+                        positiveGrowth = true;
+                    }
+                }
+                previousTimestamp = rs.getString("timeStamp");
+                previousNumber = value;
+
                 //System.out.println(value);
-                results.add(value);
+                counter +=1;
+                System.out.println(counter);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return results;
+        System.out.println(results);
+        System.out.println(results.size());
+        resultMap.put("data", results);
+        resultMap.put("timestamp", timeStampList);
+        return resultMap;
     }
 }
