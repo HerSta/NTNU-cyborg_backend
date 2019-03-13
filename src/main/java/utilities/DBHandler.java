@@ -51,7 +51,8 @@ public class DBHandler {
         String directory = dialog.getDirectory();
         System.out.println(file + " chosen.");
         System.out.println(directory + " directory");
-        String query = "INSERT into cellData (cellID, timeStamp, value) values (?, ?, ?)";
+
+        String query = "INSERT into Data (ID, ID2, base, timeStamp, value, experimentID) values (?, ?, ?, ?, ?, ?)";
 
         try{
 
@@ -59,28 +60,62 @@ public class DBHandler {
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet rs = null;
 
+            Random r = new Random();
+            int experimentID = r.nextInt(100) + 1;
+
+
+            //47 (ID=0) [pV]
             Scanner scanner = new Scanner(new File(directory+file));
             String[] cellIDArray = scanner.nextLine().split(",");
+
+            for(int x = 1; x < cellIDArray.length; x++){
+                if(cellIDArray[x].contains("Ref")){
+                    cellIDArray[x] = "99,99,Ref";
+                }else {
+                    String cell = cellIDArray[x];
+                    String[] cellSplitted = cell.split(" ");
+                    String ID = cellSplitted[0];
+                    String ID2 = cellSplitted[1];
+
+                    ID2 = ID2.substring(4, ID2.length()-1);
+
+                    String base = cellSplitted[2].substring(1, 3);
+
+                    cellIDArray[x] = ID+","+ID2+","+base;
+                }
+
+
+            }
             String timestamp = "";
             int counter = 0;
             System.out.println("Starting read of file" + file);
             System.out.println(cellIDArray[0] + cellIDArray[1]);
             while(scanner.hasNextLine()){
-                System.out.println("Starting scan");
+                counter++;
                 String line = scanner.nextLine();
                 String[] values = line.split(",");
                 timestamp = values[0];
                 for (int x = 1; x < values.length; x++){
                     //System.out.println((x-1) + " values processed");
-                    statement.setString(1,cellIDArray[x]);
-                    statement.setString(2, timestamp);
-                    statement.setString(3, values[x]);
+                    String[] cellInfo = cellIDArray[x].split(",");
+
+                    statement.setInt(1,Integer.parseInt(cellInfo[0]));
+                    statement.setInt(2, Integer.parseInt(cellInfo[1]));
+                    statement.setString(3, cellInfo[2]);
+                    statement.setInt(4, Integer.parseInt(timestamp));
+                    statement.setInt(5, Integer.parseInt(values[x]));
+                    statement.setInt(6, (experimentID));
+                    statement.addBatch();
+                    //System.out.println(statement.toString());
 
                 }
-                statement.execute();
-                counter++;
-                //System.out.println(counter + " lines processed");
+                if(counter %100 == 0){
+                    statement.executeLargeBatch();
+                    System.out.println(counter + " lines processed");
+                }
+
             }
+            System.out.println("Inserted "+counter+" lines into the DB");
             return true;
 
 
@@ -143,71 +178,94 @@ public class DBHandler {
 
     }
 
-    public Map<String, List<String>> get10kDataFromNode(String nodeID){
-        Map<String, List<String>> resultMap = new HashMap<>();
-        List<String> results = new ArrayList<>();
-        List<String> timeStampList = new ArrayList<>();
-        String query = "SELECT * FROM cellData WHERE cellID = ?";
+    public Map<String, List<Integer>> getNkDataFromNodes(int nodeId, int K){
+        Map<String, List<Integer>> resultMap = new HashMap<>();
+        List<Integer> results = new ArrayList<>();
+        List<Integer> timeStampList = new ArrayList<>();
+        List<Integer> nodeList = new ArrayList<>();
+        String query = "SELECT * FROM Data WHERE ID = ? ";
+        /*for (int x = 2; x < nodeIdList.size(); x ++){
+            query += " OR ID = ? ";
+        }*/
+        query += " ORDER BY timeStamp";
 
         try{
             Connection conn = getConnection();
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet rs = null;
-            statement.setString(1, nodeID);
+            //for (int x = 1; x < nodeIdList.size(); x++){
+                //statement.setInt(x, (nodeIdList.get(x)));
+
+            //}
+            statement.setInt(1, (nodeId));
             rs = statement.executeQuery();
             int counter = 0;
             boolean positiveGrowth = true;
-            String previousNumber = "0";
-            String previousTimestamp = "0";
+            int previousNumber = 0;
+            int previousTimestamp = 0;
             int currentNumber = 0;
+            //int previousNode = 0;
             while(rs.next()){
-                String value = rs.getString("value");
-                String timestamp = rs.getString("timeStamp");
+                if(counter == K*1000){
+                    break;
+                }
+                //int node = rs.getInt("ID");
+                int value = rs.getInt("value");
+                int timestamp = rs.getInt("timeStamp");
+                if(counter == 0){
+                    previousNumber = value;
+                    previousTimestamp = timestamp;
+                    //previousNode = node;
+                }
                 /*if (counter % 3 == 0){
                     results.add(Integer.parseInt(value));
                 }*/
 
                 if(positiveGrowth){
-                    currentNumber = Integer.parseInt(value);
-                    if(currentNumber < Integer.parseInt(previousNumber)){
+                    currentNumber = (value);
+                    if(currentNumber < (previousNumber)){
                         timeStampList.add(previousTimestamp);
                         results.add(previousNumber);
+                        //nodeList.add(previousNode);
                         positiveGrowth = false;
                     }
                 }else {
-                    currentNumber = Integer.parseInt(value);
-                    if(currentNumber > Integer.parseInt(previousNumber)){
+                    currentNumber = (value);
+                    if(currentNumber > (previousNumber)){
                         timeStampList.add(previousTimestamp);
                         results.add(previousNumber);
+                        //nodeList.add(previousNode);
                         positiveGrowth = true;
                     }
                 }
-                previousTimestamp = rs.getString("timeStamp");
+                previousTimestamp = timestamp;
                 previousNumber = value;
+                //previousNode = node;
 
                 //System.out.println(value);
                 counter +=1;
-                System.out.println(counter);
+                //System.out.println(counter);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
         System.out.println(results);
         System.out.println(results.size());
+        //resultMap.put("nodes", nodeList);
         resultMap.put("data", results);
         resultMap.put("timestamp", timeStampList);
         return resultMap;
     }
 
-    public List<String> getNodes(){
-        List<String> nodeList = new ArrayList<>();
+    public List<Integer> getNodes(){
+        List<Integer> nodeList = new ArrayList<>();
         Connection conn = getConnection();
-        String query = "SELECT distinct cellID from cellData";
+        String query = "SELECT distinct ID from Data";
         try{
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()){
-                nodeList.add(rs.getString("cellID"));
+                nodeList.add(rs.getInt("ID"));
             }
         }catch (SQLException e){
             e.printStackTrace();

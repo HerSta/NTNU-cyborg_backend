@@ -11,7 +11,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RestController
 public class DBController {
 
-    private static final String queryedNode = "47 (ID=0) [pV]";
+    private static final String queryedNode= "";
     private static final String numberOfNodes = "all";
     //private final AtomicLong counter = new AtomicLong();
 
@@ -21,7 +21,7 @@ public class DBController {
     }
 
     @RequestMapping("/nodes")
-    public List<String> nodes(@RequestParam(value = "value", defaultValue = "all") String numberOfNodes){
+    public List<Integer> nodes(@RequestParam(value = "value", defaultValue = "all") String numberOfNodes){
         DBHandler dbHandler = new DBHandler();
         return dbHandler.getNodes();
     }

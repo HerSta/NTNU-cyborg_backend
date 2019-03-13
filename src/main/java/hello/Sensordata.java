@@ -8,9 +8,10 @@ import java.util.Map;
 
 
 public class Sensordata {
-    String nodeID;
-    List<String> resultList;
-    List<String> timestampList;
+    int nodeID;
+    List<Integer> resultList;
+    List<Integer> timestampList;
+    //List<Integer> nodeList;
     String tUnit = "uS";
     String vUnit = "pV";
 
@@ -18,31 +19,43 @@ public class Sensordata {
 
 
     public Sensordata(String nodeRequestID){
-        nodeID = nodeRequestID;
-        DBHandler dbHandler = new DBHandler();
-        List<String> nodeList = dbHandler.getNodes();
-        String queryString = "";
-        for(String nodeString : nodeList ){
-            if(nodeRequestID.matches(nodeString.split(" ")[0])){
-                queryString = nodeString;
-
-            }
+        try {
+            nodeID = Integer.parseInt(nodeRequestID);
+        }catch (Exception e){
+            nodeID = Integer.parseInt(nodeRequestID.split(" ")[0]);
         }
-        Map<String, List<String>> resultMap = dbHandler.get10kDataFromNode(queryString);
+        DBHandler dbHandler = new DBHandler();
+        List<Integer> nodeList = dbHandler.getNodes();
+        //List<Integer> nodeStringList = new ArrayList<>();
+        int queryInt = 0;
+        for(int nodeId : nodeList ){
+            if(nodeId == nodeID){
+                queryInt = nodeID;
+            }
+            /*for(String node : nodeRequestID.split(" ")){
+                if(nodeId==nodeID){
+                    nodeStringList.add(nodeId);
+
+                }
+
+            }*/
+        }
+        Map<String, List<Integer>> resultMap = dbHandler.getNkDataFromNodes(queryInt, 2);
 
         resultList = resultMap.get("data");
         timestampList = resultMap.get("timestamp");
+        //nodeList = resultMap.get("nodes");
     }
 
-    public List<String> getTimestampList() {
+    public List<Integer> getTimestampList() {
         return timestampList;
     }
 
-    public List<String> getResultList() {
+    public List<Integer> getResultList() {
         return resultList;
     }
 
-    public String getNodeID() {
+    public Integer getNodeID() {
         return nodeID;
     }
 
@@ -53,4 +66,8 @@ public class Sensordata {
     public String getvUnit() {
         return vUnit;
     }
+
+    /*public List<Integer> getNodeList() {
+        return nodeList;
+    }*/
 }
