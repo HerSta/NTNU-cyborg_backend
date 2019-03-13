@@ -63,7 +63,7 @@ public class DBHandler {
             String[] cellIDArray = scanner.nextLine().split(",");
             String timestamp = "";
             int counter = 0;
-            System.out.println("Starting read of file");
+            System.out.println("Starting read of file" + file);
             System.out.println(cellIDArray[0] + cellIDArray[1]);
             while(scanner.hasNextLine()){
                 System.out.println("Starting scan");
@@ -71,14 +71,15 @@ public class DBHandler {
                 String[] values = line.split(",");
                 timestamp = values[0];
                 for (int x = 1; x < values.length; x++){
-                    System.out.println((x-1) + " values processed");
+                    //System.out.println((x-1) + " values processed");
                     statement.setString(1,cellIDArray[x]);
                     statement.setString(2, timestamp);
                     statement.setString(3, values[x]);
-                    statement.execute();
+
                 }
+                statement.execute();
                 counter++;
-                System.out.println(counter + " lines processed");
+                //System.out.println(counter + " lines processed");
             }
             return true;
 
