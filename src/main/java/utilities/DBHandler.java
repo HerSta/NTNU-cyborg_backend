@@ -185,7 +185,7 @@ public class DBHandler {
         for (int x = 1; x < nodeIds.size() ; x++){
             query += " OR ID = ?";
         }
-        query += ") AND timeStamp > ? AND timeStamp < ?";
+        query += ") AND timeStamp >= ? AND timeStamp <= ?";
         query += " ORDER BY timeStamp";
 
         try{
