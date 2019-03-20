@@ -116,6 +116,7 @@ public class DBHandler {
 
             }
             System.out.println("Inserted "+counter+" lines into the DB");
+            conn.close();
             return true;
 
 
@@ -178,7 +179,39 @@ public class DBHandler {
 
     }
 
-    public Map<String, List<Integer>> getNkDataFromNodes(int nodeId, int K){
+    public Map<Integer, Map<Integer, Integer>> getData(List<Integer> nodeIds, int startTime, int endTime){
+        Map<Integer, Map<Integer, Integer>> resultMapMap = new HashMap<>();
+        String query = "SELECT * FROM Data WHERE (ID = ?";
+        for (int x = 1; x < nodeIds.size() ; x++){
+            query += " OR ID = ?";
+        }
+        query += ") AND timeStamp > ? AND timeStamp < ?";
+        query += " ORDER BY timeStamp";
+
+        try{
+            Connection con = getConnection();
+            PreparedStatement statement = con.prepareStatement(query);
+            for (int x = 0; x < nodeIds.size(); x++){
+                resultMapMap.put(nodeIds.get(x), new HashMap<Integer, Integer>());
+                statement.setInt(x+1, nodeIds.get(x));
+            }
+            statement.setInt(nodeIds.size()+1, startTime);
+            statement.setInt(nodeIds.size()+2, endTime);
+
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                resultMapMap
+                        .get(resultSet.getInt("ID"))
+                        .put(resultSet.getInt("timeStamp"),
+                        resultSet.getInt("value"));
+            }
+            con.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return resultMapMap;
+    }
+    public Map<String, List<Integer>> getNkDataFromNode(int nodeId, int K){
         Map<String, List<Integer>> resultMap = new HashMap<>();
         List<Integer> results = new ArrayList<>();
         List<Integer> timeStampList = new ArrayList<>();
@@ -246,6 +279,7 @@ public class DBHandler {
                 counter +=1;
                 //System.out.println(counter);
             }
+            conn.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -257,8 +291,8 @@ public class DBHandler {
         return resultMap;
     }
 
-    public List<Integer> getNodes(){
-        List<Integer> nodeList = new ArrayList<>();
+    public ArrayList<Integer> getNodes(){
+        ArrayList<Integer> nodeList = new ArrayList<>();
         Connection conn = getConnection();
         String query = "SELECT distinct ID from Data";
         try{
@@ -267,9 +301,11 @@ public class DBHandler {
             while (rs.next()){
                 nodeList.add(rs.getInt("ID"));
             }
+            conn.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
+
         return nodeList;
     }
 }

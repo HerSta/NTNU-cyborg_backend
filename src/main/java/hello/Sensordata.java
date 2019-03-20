@@ -11,6 +11,7 @@ public class Sensordata {
     int nodeID;
     List<Integer> resultList;
     List<Integer> timestampList;
+
     //List<Integer> nodeList;
     String tUnit = "uS";
     String vUnit = "pV";
@@ -40,7 +41,7 @@ public class Sensordata {
 
             }*/
         }
-        Map<String, List<Integer>> resultMap = dbHandler.getNkDataFromNodes(queryInt, 2);
+        Map<String, List<Integer>> resultMap = dbHandler.getNkDataFromNode(queryInt, 2);
 
         resultList = resultMap.get("data");
         timestampList = resultMap.get("timestamp");
