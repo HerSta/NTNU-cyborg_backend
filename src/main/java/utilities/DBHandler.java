@@ -283,8 +283,8 @@ public class DBHandler {
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println(results);
-        System.out.println(results.size());
+        //System.out.println(results);
+        //System.out.println(results.size());
         //resultMap.put("nodes", nodeList);
         resultMap.put("data", results);
         resultMap.put("timestamp", timeStampList);
