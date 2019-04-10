@@ -11,13 +11,27 @@ import java.sql.*;
 import java.util.*;
 import java.util.List;
 
+
 public class DBHandler {
-    private final String username = "kimera_k3ah";
-    private final String  password = "passord132";
+
+    String hostName = "kyborg-db.database.windows.net"; // update me
+    String dbName = "kyborg-db"; // update me
+    String user = "kyborg"; // update me
+    String password = "Kyburger2019"; // update me
+    String url = String.format("jdbc:sqlserver://%s:1433;database=%s;user=%s;password=%s;encrypt=true;"
+            + "hostNameInCertificate=*.database.windows.net;loginTimeout=30;", hostName, dbName, user, password);
+
+    /*
+    private final String username = "kyborg";//"kimera_k3ah";
+    private final String  password = "Kyburger2019";//"passord132";
     //private final String url = "mysql.stud.ntnu.no";
     private final String driver = "com.mysql.cj.jdbc.Driver";
-    private static final String url = "jdbc:mysql://mysql.stud.ntnu.no:3306/kimera_k3ah";
+    private static final String url = "jdbc:sqlserver://kyborg-db.database.windows.net:1433/kyborg-db";//"jdbc:mysql://mysql.stud.ntnu.no:3306/kimera_k3ah";
 
+    private static final String constring = "jdbc:sqlserver://kyborg-db.database.windows.net:1433;database=kyborg-db;user=kyborg@kyborg-db;password={Kyburger2019};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+    String connectionUrl = "jdbc:sqlserver://kyborg-db.database.windows.net:1433/kyborg-db;database=kyborg-db;user=kyborg@kyborg-db;password={Kyburger2019};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+
+     */
     public DBHandler(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -29,10 +43,10 @@ public class DBHandler {
     public Connection getConnection(){
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(url, username, password);
+            conn = DriverManager.getConnection(url);
         }catch (SQLException ex){
-            ex.getErrorCode();
-            ex.getSQLState();
+            System.out.println(ex.getErrorCode());
+            System.out.println(ex.getSQLState());
         }
         if(conn == (null)){
             System.out.println("Could not create connection");
