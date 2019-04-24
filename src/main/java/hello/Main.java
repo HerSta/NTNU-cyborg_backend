@@ -1,5 +1,6 @@
 package hello;
 import utilities.DBHandler;
+import java.sql.DriverManager;
 import utilities.FileHandler;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class Main {
         DBHandler dbHandler = new DBHandler();
 
         dbHandler.getConnection();
-        //dbHandler.insertCSVMatrixIntoDB();'
+        dbHandler.insertCSVMatrixIntoDB();
         /*
         FileHandler fileHandler = new FileHandler();
         String fileString = "C:\\Users\\Kim Erling\\Documents\\2017-10-20_MEA2_100000rows_10sec";

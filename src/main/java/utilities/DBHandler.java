@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.*;
 import java.util.List;
+import java.sql.DriverManager;
 
 
 public class DBHandler {
@@ -33,11 +34,12 @@ public class DBHandler {
 
      */
     public DBHandler(){
+        /*
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
         } catch (Exception ex) {
             System.out.println("Could not find driver for database");
-        }
+        }*/
     }
 
     public Connection getConnection(){
@@ -75,11 +77,15 @@ public class DBHandler {
             ResultSet rs = null;
 
             Random r = new Random();
-            int experimentID = r.nextInt(100) + 1;
+            int experimentID = 0;//r.nextInt(100) + 1;
 
 
             //47 (ID=0) [pV]
+            int skiplines = 6;
             Scanner scanner = new Scanner(new File(directory+file));
+            for (int x = 0; x < skiplines; x++){
+                scanner.nextLine();
+            }
             String[] cellIDArray = scanner.nextLine().split(",");
 
             for(int x = 1; x < cellIDArray.length; x++){
