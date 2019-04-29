@@ -231,6 +231,7 @@ public class DBHandler {
         }
         return resultMapMap;
     }
+
     public Map<String, List<Integer>> getNkDataFromNode(int nodeId, int K){
         Map<String, List<Integer>> resultMap = new HashMap<>();
         List<Integer> results = new ArrayList<>();

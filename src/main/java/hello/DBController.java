@@ -35,7 +35,7 @@ public class DBController {
     data(
             @RequestParam(value="nodeList", defaultValue = "all") String nodesString,
             @RequestParam(value="startTime", defaultValue = "0") int startTime,
-            @RequestParam(value="endTime", defaultValue = "10000000") int endTime)
+            @RequestParam(value="endTime", defaultValue = "20000") int endTime)
     {
         DBHandler dbHandler = new DBHandler();
         return new MultiSensorData(nodesString, startTime, endTime);
