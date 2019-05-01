@@ -27,6 +27,9 @@ java -jar target/gs-rest-service-0.1.0.jar
 ```
 
 The server will then run on port 8080.
+If run in production one must either open this port in the firewall settings,
+or forward the port using a reverse proxy.
+The later being the recommended if security is crucial.
 
 ## The Frontend
 [NTNU Cyborg Frontent](https://github.com/Astroxslurg/ntnu-cyborg_node "A Node/Next-based frontend repo")
